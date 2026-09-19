@@ -81,7 +81,7 @@ export default function App() {
       <section className="container">
         <header>
           <p className="eyebrow">RAG • LANGGRAPH • PGVECTOR</p>
-          <h1>AI Knowledge Assistant</h1>
+          <h1>Welcome to My AI Assistant</h1>
           <p className="subtitle">
             Upload your company documents and ask questions about them.
           </p>
