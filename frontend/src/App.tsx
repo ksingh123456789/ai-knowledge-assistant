@@ -15,6 +15,8 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
+  const [selectedModel, setSelectedModel] = useState("openrouter/free");
+  const [apiKey, setApiKey] = useState("");
 
   async function askQuestion() {
     if (!question.trim()) return;
@@ -26,7 +28,11 @@ export default function App() {
       const response = await fetch(`${API_URL}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
+        body: JSON.stringify({
+          question,
+          model: selectedModel,
+          api_key: apiKey,
+        }),
       });
 
       const data = await response.json();
@@ -100,6 +106,27 @@ export default function App() {
 
         <section className="card">
           <h2>2. Ask a question</h2>
+
+          <label htmlFor="model-select">Model</label>
+          <select
+            id="model-select"
+            value={selectedModel}
+            onChange={(event) => setSelectedModel(event.target.value)}
+          >
+            <option value="openrouter/free">openrouter/free</option>
+            <option value="google/gemma-4-26b-a4b-it:free">
+              Gemma 4 26B (Free)
+            </option>
+          </select>
+
+          <label htmlFor="api-key-input">API Key (optional)</label>
+          <input
+            id="api-key-input"
+            type="password"
+            value={apiKey}
+            onChange={(event) => setApiKey(event.target.value)}
+            placeholder="Optional API key"
+          />
 
           <textarea
             value={question}
