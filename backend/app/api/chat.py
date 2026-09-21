@@ -9,6 +9,8 @@ router = APIRouter()
 
 class ChatRequest(BaseModel):
     question: str = Field(min_length=1, max_length=4000)
+    model: str | None = None
+    api_key: str | None = None
 
 
 class ChatResponse(BaseModel):
@@ -25,6 +27,8 @@ def chat(request: ChatRequest):
             "context": [],
             "answer": "",
             "attempts": 0,
+            "model": request.model,
+            "api_key": request.api_key,
         }
     )
 

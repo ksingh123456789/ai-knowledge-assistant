@@ -9,3 +9,5 @@ class GraphState(TypedDict):
     context: list[Document]
     answer: str
     attempts: int
+    model: str | None
+    api_key: str | None
