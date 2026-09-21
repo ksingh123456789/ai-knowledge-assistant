@@ -114,8 +114,8 @@ export default function App() {
             onChange={(event) => setSelectedModel(event.target.value)}
           >
             <option value="openrouter/free">openrouter/free</option>
-            <option value="qwen/qwen-2.5-coder-32b-instruct">
-              Qwen 2.5 Coder
+            <option value="google/gemma-4-26b-a4b-it:free">
+              Gemma 4 26B (Free)
             </option>
           </select>
 

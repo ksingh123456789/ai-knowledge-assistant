@@ -1,0 +1,6 @@
+repo = "ksingh123456789/ai-knowledge-assistant"
+base_branch = "main"
+ticket_prefix = "agentdev run --ticket-id TEXT-001 --requirement \"In the frontend folder only, change the text 'Welcome to AI Knowledge Assistant' to 'Welcome to My AI Assistant'. Do not modify anything in the backend folder.\" --repo-path ."
+model = "claude-sonnet-5"
+max_iterations = 3
+max_human_review_rounds = 3
