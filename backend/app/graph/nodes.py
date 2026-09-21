@@ -35,7 +35,9 @@ def grade_context(state: GraphState) -> str:
 
 
 def rewrite_query(state: GraphState) -> dict:
-    llm = get_llm()
+    model_name = state.get("model")
+    api_key = state.get("api_key")
+    llm = get_llm(model_name=model_name, api_key=api_key)
 
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -56,7 +58,9 @@ def rewrite_query(state: GraphState) -> dict:
 
 
 def generate_answer(state: GraphState) -> dict:
-    llm = get_llm()
+    model_name = state.get("model")
+    api_key = state.get("api_key")
+    llm = get_llm(model_name=model_name, api_key=api_key)
 
     context = "\n\n".join(
         f"Source: {doc.metadata.get('source', 'unknown')}\n"
