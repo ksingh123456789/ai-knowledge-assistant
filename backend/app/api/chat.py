@@ -38,6 +38,15 @@ def _is_rate_limit_error(exc: Exception) -> bool:
     except ImportError:
         pass
 
+    try:
+        import httpx
+
+        if isinstance(exc, httpx.HTTPStatusError):
+            if getattr(exc.response, "status_code", None) == 429:
+                return True
+    except ImportError:
+        pass
+
     status_code = getattr(exc, "status_code", None)
     if status_code == 429:
         return True
@@ -49,6 +58,16 @@ def _is_rate_limit_error(exc: Exception) -> bool:
     body = getattr(exc, "body", None)
     if isinstance(body, dict) and body.get("code") == 429:
         return True
+
+    cause = exc.__cause__
+    if cause is not None and cause is not exc:
+        if _is_rate_limit_error(cause):
+            return True
+
+    context = exc.__context__
+    if context is not None and context is not exc and context is not cause:
+        if _is_rate_limit_error(context):
+            return True
 
     return False
 
