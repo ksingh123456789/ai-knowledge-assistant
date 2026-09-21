@@ -2,6 +2,9 @@ import { ChangeEvent, useState } from "react";
 
 const API_URL = "http://localhost:8000";
 
+const RATE_LIMIT_MESSAGE =
+  "The selected model is temporarily rate-limited. Please retry shortly or select another model.";
+
 type Source = {
   content: string;
   source: string;
@@ -35,10 +38,20 @@ export default function App() {
         }),
       });
 
-      const data = await response.json();
+      if (response.status === 429) {
+        setMessage(RATE_LIMIT_MESSAGE);
+        return;
+      }
+
+      let data: any = null;
+      try {
+        data = await response.json();
+      } catch {
+        data = null;
+      }
 
       if (!response.ok) {
-        throw new Error(data.detail ?? "Request failed");
+        throw new Error(data?.detail ?? "Request failed");
       }
 
       setAnswer(data.answer);

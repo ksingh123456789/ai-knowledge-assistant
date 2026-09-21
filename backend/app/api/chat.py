@@ -1,10 +1,15 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from app.graph.nodes import build_source_payload
 from app.graph.workflow import graph
 
 router = APIRouter()
+
+RATE_LIMIT_MESSAGE = (
+    "The selected model is temporarily rate-limited. "
+    "Please retry shortly or select another model."
+)
 
 
 class ChatRequest(BaseModel):
@@ -18,19 +23,76 @@ class ChatResponse(BaseModel):
     sources: list[dict]
 
 
+def _is_rate_limit_error(exc: Exception) -> bool:
+    """Detect rate-limit (HTTP 429) errors generically.
+
+    Checks for known OpenAI/LangChain rate-limit exception types as well as
+    any exception carrying a status_code/response.status_code of 429, so
+    that we don't rely solely on a single exception class name.
+    """
+    try:
+        import openai
+
+        if isinstance(exc, openai.RateLimitError):
+            return True
+    except ImportError:
+        pass
+
+    try:
+        import httpx
+
+        if isinstance(exc, httpx.HTTPStatusError):
+            if getattr(exc.response, "status_code", None) == 429:
+                return True
+    except ImportError:
+        pass
+
+    status_code = getattr(exc, "status_code", None)
+    if status_code == 429:
+        return True
+
+    response = getattr(exc, "response", None)
+    if response is not None and getattr(response, "status_code", None) == 429:
+        return True
+
+    body = getattr(exc, "body", None)
+    if isinstance(body, dict) and body.get("code") == 429:
+        return True
+
+    cause = exc.__cause__
+    if cause is not None and cause is not exc:
+        if _is_rate_limit_error(cause):
+            return True
+
+    context = exc.__context__
+    if context is not None and context is not exc and context is not cause:
+        if _is_rate_limit_error(context):
+            return True
+
+    return False
+
+
 @router.post("", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    result = graph.invoke(
-        {
-            "question": request.question,
-            "search_query": "",
-            "context": [],
-            "answer": "",
-            "attempts": 0,
-            "model": request.model,
-            "api_key": request.api_key,
-        }
-    )
+    try:
+        result = graph.invoke(
+            {
+                "question": request.question,
+                "search_query": "",
+                "context": [],
+                "answer": "",
+                "attempts": 0,
+                "model": request.model,
+                "api_key": request.api_key,
+            }
+        )
+    except Exception as exc:
+        if _is_rate_limit_error(exc):
+            raise HTTPException(
+                status_code=429,
+                detail=RATE_LIMIT_MESSAGE,
+            ) from None
+        raise
 
     return ChatResponse(
         answer=result["answer"],
