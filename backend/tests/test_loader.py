@@ -91,6 +91,16 @@ def test_load_file_rejects_empty_pdf():
         os.unlink(path)
 
 
+def test_load_file_rejects_empty_txt():
+    fd, path = tempfile.mkstemp(suffix=".txt")
+    os.close(fd)
+    try:
+        with pytest.raises(ValueError):
+            load_file(path)
+    finally:
+        os.unlink(path)
+
+
 def test_load_file_handles_uppercase_extension():
     path = _write_temp_file(b"Some content here.", ".TXT")
     try:

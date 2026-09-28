@@ -28,7 +28,9 @@ def load_file(path: str) -> list[Document]:
                 f"Failed to load PDF file '{file_path.name}': {error}"
             ) from error
 
-        if not documents:
+        if not documents or not any(
+            document.page_content.strip() for document in documents
+        ):
             raise ValueError(
                 f"No content could be extracted from PDF file '{file_path.name}'. "
                 "The file may be empty, corrupted, or a scanned/image-only PDF "
@@ -44,6 +46,14 @@ def load_file(path: str) -> list[Document]:
             raise ValueError(
                 f"Failed to load TXT file '{file_path.name}': {error}"
             ) from error
+
+        if not documents or not any(
+            document.page_content.strip() for document in documents
+        ):
+            raise ValueError(
+                f"No content could be extracted from TXT file '{file_path.name}'. "
+                "The file may be empty or corrupted."
+            )
 
         return documents
 

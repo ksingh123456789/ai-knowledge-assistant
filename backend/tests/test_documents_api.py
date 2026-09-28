@@ -99,3 +99,25 @@ def test_upload_returns_400_when_ingestion_raises_value_error(mock_ingest_file):
 
     assert response.status_code == 400
     assert "empty.docx" in response.json()["detail"]
+
+
+@patch("app.api.documents.ingest_file")
+def test_upload_cleans_up_temp_file_on_value_error(mock_ingest_file):
+    from pathlib import Path
+
+    captured_paths = []
+
+    def fake_ingest_file(path, source_name):
+        captured_paths.append(path)
+        raise ValueError("boom")
+
+    mock_ingest_file.side_effect = fake_ingest_file
+
+    response = client.post(
+        "/api/documents/upload",
+        files={"file": ("empty.txt", io.BytesIO(b""), "text/plain")},
+    )
+
+    assert response.status_code == 400
+    assert len(captured_paths) == 1
+    assert not Path(captured_paths[0]).exists()

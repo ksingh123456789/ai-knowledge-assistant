@@ -103,6 +103,7 @@ Not supported:
 - Legacy `.doc` (binary OLE format). Convert to `.docx` before uploading.
 - Scanned/image-only PDFs. There is no OCR support — only PDFs with an embedded text layer will extract content.
 - Any other extension (e.g. `.csv`, `.png`) is rejected with a descriptive 400 error.
+- Empty/zero-byte or corrupted files of any supported extension are rejected with a descriptive 400 error rather than silently ingesting empty content.
 
 ### Chat
 
@@ -150,7 +151,7 @@ cd backend
 pip install -r requirements.txt
 ```
 
-DOCX support is provided by `docx2txt` (via `langchain_community.document_loaders.Docx2txtLoader`) and `python-docx`, both pinned in `requirements.txt`.
+DOCX support in production is provided solely by `docx2txt` (via `langchain_community.document_loaders.Docx2txtLoader`). `python-docx` is included only as a test-time dependency, used by the test suite to programmatically build `.docx` fixture files — it is not exercised by the production ingestion path.
 
 ## Run tests
 
@@ -187,6 +188,7 @@ The graph state carries:
 - No OCR: scanned/image-only PDFs will not yield extracted text.
 - Legacy `.doc` files (pre-2007 binary Word format) are not supported; convert to `.docx` first.
 - DOCX extraction is plain-text only — embedded images, tables, headers/footers, and complex formatting are not preserved, only the textual content is extracted.
+- Empty or invalid/corrupted files (zero-byte or unreadable) for any supported extension raise a clear error rather than being silently ingested as empty content.
 
 ## Learning order
 

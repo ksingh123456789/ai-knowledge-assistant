@@ -85,3 +85,13 @@ def test_ingest_file_raises_for_empty_docx():
             ingest_file(path=path, source_name="empty.docx")
     finally:
         os.unlink(path)
+
+
+def test_ingest_file_raises_for_empty_txt():
+    fd, path = tempfile.mkstemp(suffix=".txt")
+    os.close(fd)
+    try:
+        with pytest.raises(ValueError):
+            ingest_file(path=path, source_name="empty.txt")
+    finally:
+        os.unlink(path)
