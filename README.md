@@ -8,7 +8,7 @@ React → FastAPI → LangGraph → Retriever → PostgreSQL + pgvector → LLM
 
 Document ingestion:
 
-PDF/TXT → Loader → Chunker → Embeddings → PostgreSQL/pgvector
+TXT/PDF/DOCX → Loader → Chunker → Embeddings → PostgreSQL/pgvector
 
 LangSmith traces the LangChain/LangGraph execution.
 
@@ -94,9 +94,15 @@ POST `/api/documents/upload`
 Multipart form field:
 `file`
 
-Supported initially:
+Supported file types:
 - `.txt`
 - `.pdf`
+- `.docx`
+
+Not supported:
+- Legacy `.doc` (binary OLE format). Convert to `.docx` before uploading.
+- Scanned/image-only PDFs. There is no OCR support — only PDFs with an embedded text layer will extract content.
+- Any other extension (e.g. `.csv`, `.png`) is rejected with a descriptive 400 error.
 
 ### Chat
 
@@ -123,6 +129,36 @@ Response:
 }
 ```
 
+## Adding a policy document
+
+1. Place your source file (`.txt`, `.pdf`, or `.docx`) in `backend/sample_data/` or upload it via the frontend/`POST /api/documents/upload`.
+2. Ingest it into the vector store using the upload endpoint, or by calling `ingest_file` directly for local files:
+
+```bash
+cd backend
+python -c "from app.rag.ingestion import ingest_file; print(ingest_file('sample_data/refund_policy.docx', 'refund_policy.docx'))"
+```
+
+This prints the number of chunks created and written to PostgreSQL/pgvector.
+
+3. Re-index all sample documents (repeat the command above for each file: `.txt`, `.pdf`, `.docx`) whenever their content changes.
+
+## Install dependencies
+
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+DOCX support is provided by `docx2txt` (via `langchain_community.document_loaders.Docx2txtLoader`) and `python-docx`, both pinned in `requirements.txt`.
+
+## Run tests
+
+```bash
+cd backend
+pytest
+```
+
 ## Graph
 
 The current LangGraph is intentionally simple:
@@ -146,10 +182,16 @@ The graph state carries:
 - answer
 - attempts
 
+## Known limitations
+
+- No OCR: scanned/image-only PDFs will not yield extracted text.
+- Legacy `.doc` files (pre-2007 binary Word format) are not supported; convert to `.docx` first.
+- DOCX extraction is plain-text only — embedded images, tables, headers/footers, and complex formatting are not preserved, only the textual content is extracted.
+
 ## Learning order
 
 1. Run the app.
-2. Upload a TXT/PDF.
+2. Upload a TXT/PDF/DOCX.
 3. Inspect the chunks in PostgreSQL.
 4. Test retrieval.
 5. Understand embeddings.
