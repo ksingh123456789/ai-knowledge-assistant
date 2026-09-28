@@ -120,6 +120,6 @@ zstandard==0.25.0
 
 # Test-only dependency: python-docx is used exclusively by the test suite to
 # construct .docx fixture files. It is NOT required by the production DOCX
-# loading path, which relies solely on docx2txt via
+# loading path, which relies solely on docx2txt (pinned above) via
 # langchain_community.document_loaders.Docx2txtLoader.
 python-docx==1.1.2
