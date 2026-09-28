@@ -8,15 +8,26 @@ from app.rag.ingestion import ingest_file
 
 router = APIRouter()
 
+SUPPORTED_EXTENSIONS = {".pdf", ".txt", ".docx"}
+
 
 @router.post("/upload")
 def upload_document(file: UploadFile = File(...)):
     extension = Path(file.filename or "").suffix.lower()
 
-    if extension not in {".pdf", ".txt"}:
+    if extension == ".doc":
         raise HTTPException(
             status_code=400,
-            detail="Only PDF and TXT files are supported.",
+            detail="Legacy .doc files are not supported. Please use .docx instead.",
+        )
+
+    if extension not in SUPPORTED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"Unsupported file extension '{extension or '(none)'}'. "
+                "Only .pdf, .txt, and .docx files are supported."
+            ),
         )
 
     with tempfile.NamedTemporaryFile(
@@ -31,6 +42,8 @@ def upload_document(file: UploadFile = File(...)):
             path=temporary_path,
             source_name=file.filename or "uploaded-file",
         )
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
     finally:
         Path(temporary_path).unlink(missing_ok=True)
 
