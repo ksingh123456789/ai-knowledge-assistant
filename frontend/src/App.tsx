@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from "react";
+import JiraTickets from "./JiraTickets";
 
 const API_URL = "http://localhost:8000";
 
@@ -81,7 +82,7 @@ export default function App() {
       <section className="container">
         <header>
           <p className="eyebrow">RAG • LANGGRAPH • PGVECTOR</p>
-          <h1>AI Knowledge Assistant</h1>
+          <h1>AI Assistant for Knowlege</h1>
           <p className="subtitle">
             Upload your company documents and ask questions about them.
           </p>
@@ -130,6 +131,9 @@ export default function App() {
             ))}
           </section>
         )}
+
+
+        <JiraTickets />
       </section>
     </main>
   );
