@@ -1,4 +1,4 @@
-# AI Knowledge Assistant — FastAPI + LangChain + LangGraph + PostgreSQL/pgvector + React
+# AI Assistant for Knowlege — FastAPI + LangChain + LangGraph + PostgreSQL/pgvector + React
 
 A learning-friendly, production-structured RAG project.
 
