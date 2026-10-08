@@ -1,4 +1,6 @@
 import { ChangeEvent, useState } from "react";
+import JiraTickets from "./JiraTickets";
+import Login from "./Login";
 
 const API_URL = "http://localhost:8000";
 
@@ -15,6 +17,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
+  const [showLogin, setShowLogin] = useState(false);
 
   async function askQuestion() {
     if (!question.trim()) return;
@@ -88,6 +91,14 @@ export default function App() {
         </header>
 
         <section className="card">
+          <h2>Account</h2>
+          <button type="button" onClick={() => setShowLogin((value) => !value)}>
+            {showLogin ? "Hide login" : "Show login"}
+          </button>
+          {showLogin && <Login />}
+        </section>
+
+        <section className="card">
           <h2>1. Upload document</h2>
           <input
             type="file"
@@ -130,6 +141,9 @@ export default function App() {
             ))}
           </section>
         )}
+
+
+        <JiraTickets />
       </section>
     </main>
   );
