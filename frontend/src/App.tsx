@@ -1,4 +1,6 @@
 import { ChangeEvent, useState } from "react";
+import JiraTickets from "./JiraTickets";
+import Signup from "./Signup";
 
 const API_URL = "http://localhost:8000";
 
@@ -8,6 +10,10 @@ type Source = {
   page?: number | null;
 };
 
+function getPath(): string {
+  return window.location.pathname;
+}
+
 export default function App() {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -15,6 +21,12 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
+  const [path, setPath] = useState(getPath());
+
+  function navigate(to: string) {
+    window.history.pushState({}, "", to);
+    setPath(to);
+  }
 
   async function askQuestion() {
     if (!question.trim()) return;
@@ -76,6 +88,10 @@ export default function App() {
     }
   }
 
+  if (path === "/signup") {
+    return <Signup />;
+  }
+
   return (
     <main className="page">
       <section className="container">
@@ -85,6 +101,17 @@ export default function App() {
           <p className="subtitle">
             Upload your company documents and ask questions about them.
           </p>
+          <nav>
+            <a
+              href="/signup"
+              onClick={(event) => {
+                event.preventDefault();
+                navigate("/signup");
+              }}
+            >
+              Sign Up
+            </a>
+          </nav>
         </header>
 
         <section className="card">
@@ -130,6 +157,9 @@ export default function App() {
             ))}
           </section>
         )}
+
+
+        <JiraTickets />
       </section>
     </main>
   );
