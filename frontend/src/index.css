@@ -1,0 +1,151 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #121212;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+.page {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.container {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  color: #8f8f8f;
+  margin: 0 0 0.25rem;
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+}
+
+.subtitle {
+  color: #b3b3b3;
+  margin: 0;
+}
+
+.card {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.card h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.15rem;
+}
+
+textarea,
+input[type="email"],
+input[type="text"],
+input[type="file"] {
+  width: 100%;
+  box-sizing: border-box;
+  background: #0f0f0f;
+  color: inherit;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+label {
+  font-size: 0.85rem;
+  color: #b3b3b3;
+}
+
+button {
+  align-self: flex-start;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+button:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+
+.link-button {
+  align-self: auto;
+  background: none;
+  color: #60a5fa;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link-button:hover:not(:disabled) {
+  background: none;
+  color: #3b82f6;
+}
+
+.message {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.message.error {
+  color: #f87171;
+}
+
+.message.success {
+  color: #4ade80;
+}
+
+.answer {
+  white-space: pre-wrap;
+}
+
+.source {
+  border-top: 1px solid #2a2a2a;
+  padding-top: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.source strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}

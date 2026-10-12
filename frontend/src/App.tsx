@@ -1,4 +1,6 @@
 import { ChangeEvent, useState } from "react";
+import JiraTickets from "./JiraTickets";
+import ResetPassword from "./ResetPassword";
 
 const API_URL = "http://localhost:8000";
 
@@ -8,7 +10,10 @@ type Source = {
   page?: number | null;
 };
 
+type View = "home" | "reset-password";
+
 export default function App() {
+  const [view, setView] = useState<View>("home");
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [sources, setSources] = useState<Source[]>([]);
@@ -76,6 +81,10 @@ export default function App() {
     }
   }
 
+  if (view === "reset-password") {
+    return <ResetPassword onBack={() => setView("home")} />;
+  }
+
   return (
     <main className="page">
       <section className="container">
@@ -130,6 +139,22 @@ export default function App() {
             ))}
           </section>
         )}
+
+        <section className="card">
+          <h2>Account</h2>
+          <p>
+            Forgot your password?{" "}
+            <button
+              type="button"
+              className="link-button"
+              onClick={() => setView("reset-password")}
+            >
+              Reset it here
+            </button>
+          </p>
+        </section>
+
+        <JiraTickets />
       </section>
     </main>
   );
