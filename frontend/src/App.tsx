@@ -1,4 +1,8 @@
 import { ChangeEvent, useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import JiraTickets from "./JiraTickets";
+import AboutUs from "./AboutUs";
+import Navbar from "./components/Navbar";
 
 const API_URL = "http://localhost:8000";
 
@@ -8,7 +12,7 @@ type Source = {
   page?: number | null;
 };
 
-export default function App() {
+function Home() {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [sources, setSources] = useState<Source[]>([]);
@@ -130,7 +134,22 @@ export default function App() {
             ))}
           </section>
         )}
+
+
+        <JiraTickets />
       </section>
     </main>
+  );
+}
+
+export default function App() {
+  return (
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<AboutUs />} />
+      </Routes>
+    </>
   );
 }
