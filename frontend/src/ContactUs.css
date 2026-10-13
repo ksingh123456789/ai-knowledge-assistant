@@ -1,0 +1,72 @@
+.contact-card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.form-field label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: vertical;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: #4f8cff;
+  box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.2);
+}
+
+.form-field input[aria-invalid="true"],
+.form-field textarea[aria-invalid="true"] {
+  border-color: #d64545;
+}
+
+.field-error {
+  color: #d64545;
+  font-size: 0.85rem;
+}
+
+.contact-success {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.contact-success button {
+  align-self: flex-start;
+}
+
+@media (max-width: 600px) {
+  .contact-form {
+    gap: 1rem;
+  }
+
+  .contact-success button {
+    align-self: stretch;
+  }
+}
