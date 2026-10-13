@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from "react";
+import JiraTickets from "./JiraTickets";
 
 const API_URL = "http://localhost:8000";
 
@@ -99,7 +100,7 @@ export default function App() {
         </section>
 
         <section className="card">
-          <h2>2. Ask a question</h2>
+          <h2>2. Ask a query</h2>
 
           <textarea
             value={question}
@@ -130,6 +131,9 @@ export default function App() {
             ))}
           </section>
         )}
+
+
+        <JiraTickets />
       </section>
     </main>
   );
