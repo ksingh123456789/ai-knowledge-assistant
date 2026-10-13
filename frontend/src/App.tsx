@@ -1,4 +1,7 @@
 import { ChangeEvent, useState } from "react";
+import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
+import JiraTickets from "./JiraTickets";
+import Dashboard from "./Dashboard";
 
 const API_URL = "http://localhost:8000";
 
@@ -8,7 +11,7 @@ type Source = {
   page?: number | null;
 };
 
-export default function App() {
+function ChatPage() {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [sources, setSources] = useState<Source[]>([]);
@@ -130,7 +133,30 @@ export default function App() {
             ))}
           </section>
         )}
+
+
+        <JiraTickets />
       </section>
     </main>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <nav className="app-nav">
+        <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
+          Dashboard
+        </NavLink>
+        <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
+          Chat
+        </NavLink>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<ChatPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
