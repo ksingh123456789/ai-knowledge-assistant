@@ -1,4 +1,6 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import JiraTickets from "./JiraTickets";
+import PrivacyPolicy from "./PrivacyPolicy";
 
 const API_URL = "http://localhost:8000";
 
@@ -8,6 +10,16 @@ type Source = {
   page?: number | null;
 };
 
+function getInitialView(): "home" | "privacy" {
+  if (typeof window !== "undefined") {
+    const path = window.location.pathname;
+    if (path === "/privacy-policy" || path === "/privacy") {
+      return "privacy";
+    }
+  }
+  return "home";
+}
+
 export default function App() {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -15,6 +27,21 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
+  const [view, setView] = useState<"home" | "privacy">(getInitialView());
+
+  function navigateTo(nextView: "home" | "privacy") {
+    const path = nextView === "privacy" ? "/privacy-policy" : "/";
+    if (typeof window !== "undefined" && window.history?.pushState) {
+      window.history.pushState({}, "", path);
+    }
+    setView(nextView);
+  }
+
+  useEffect(() => {
+    const handler = () => setView(getInitialView());
+    window.addEventListener("popstate", handler);
+    return () => window.removeEventListener("popstate", handler);
+  }, []);
 
   async function askQuestion() {
     if (!question.trim()) return;
@@ -76,6 +103,27 @@ export default function App() {
     }
   }
 
+  if (view === "privacy") {
+    return (
+      <>
+        <PrivacyPolicy />
+        <footer className="container">
+          <p>
+            <a
+              href="/"
+              onClick={(event) => {
+                event.preventDefault();
+                navigateTo("home");
+              }}
+            >
+              Back to Home
+            </a>
+          </p>
+        </footer>
+      </>
+    );
+  }
+
   return (
     <main className="page">
       <section className="container">
@@ -130,6 +178,23 @@ export default function App() {
             ))}
           </section>
         )}
+
+
+        <JiraTickets />
+
+        <footer className="container">
+          <p>
+            <a
+              href="/privacy-policy"
+              onClick={(event) => {
+                event.preventDefault();
+                navigateTo("privacy");
+              }}
+            >
+              Privacy Policy
+            </a>
+          </p>
+        </footer>
       </section>
     </main>
   );
