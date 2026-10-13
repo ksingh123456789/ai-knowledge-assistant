@@ -1,0 +1,83 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dashboard-heading {
+  margin-bottom: 0.5rem;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
+  padding: 1rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.stat-card-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-card-value {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.recent-activity .activity-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+  min-width: 0;
+}
+
+.activity-description {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-timestamp {
+  color: #888;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.empty-state {
+  color: #888;
+  font-style: italic;
+}
+
+.dashboard-error {
+  color: #b00020;
+}
